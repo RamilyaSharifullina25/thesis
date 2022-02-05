@@ -3,8 +3,8 @@ Skolkovo institute of science and technology.
 Petroleum engineering programme (2022).**
 
 
-Description:
-1.Notebooks folder contains:   
+Description:  
+1.  Notebooks folder contains:   
 
 | Notebook | Epochs | Number of images |
 | --- | --- | --- |
