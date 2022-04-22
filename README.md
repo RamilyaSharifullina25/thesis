@@ -16,4 +16,6 @@ There are modeifications of this model:
 	- `tsfresh_metrics.py` where metrics for time series comparison are written, loss function for such metrics will be written further
 4. `model_verification.pt` is saved verification (inception time) model paramteres.
 
-5. `train.ipynb` where all computations are made 
+5. `inceptiontime` is inception time classifier model
+
+6. `train.ipynb` where all computations are made 
