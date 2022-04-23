@@ -24,4 +24,6 @@ There are modeifications of this model:
 	- `gan_cba`  
 	- ...  
 
-6. `research.ipynb` where all computations are made 
+6. `research.ipynb` where all computations are made
+
+![Deiden_simil](TIME/De_iden_vs_structural_simil.png) 
