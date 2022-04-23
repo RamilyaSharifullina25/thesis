@@ -14,8 +14,14 @@ There are modeifications of this model:
 3. `time_series_metrics` contains of
 	- `ssim_loss.py` where loss function for 1d structure similarity is written
 	- `tsfresh_metrics.py` where metrics for time series comparison are written, loss function for such metrics will be written further
-4. `model_verification.pt` is saved verification (inception time) model paramteres.
 
-5. `inceptiontime` is inception time classifier model
+4. `inceptiontime` is inception time classifier model
 
-6. `train.ipynb` where all computations are made 
+5. `trained_models` is a folder where all pretrained models are located including:
+	`model_verification.pt` is saved verification (inception time) model paramteres.
+	`gan_ms`
+	`gan_rms`
+	`gan_cba` 
+	...
+
+6. `research.ipynb` where all computations are made 
