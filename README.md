@@ -17,11 +17,11 @@ There are modeifications of this model:
 
 4. `inceptiontime` is inception time classifier model
 
-5. `trained_models` is a folder where all pretrained models are located including:
-	`model_verification.pt` is saved verification (inception time) model paramteres.
-	`gan_ms`
-	`gan_rms`
-	`gan_cba` 
-	...
+5. `trained_models` is a folder where all pretrained models are located including:  
+	`model_verification.pt` is saved verification (inception time) model paramteres.  
+	`gan_ms`  
+	`gan_rms`  
+	`gan_cba`  
+	...  
 
 6. `research.ipynb` where all computations are made 
