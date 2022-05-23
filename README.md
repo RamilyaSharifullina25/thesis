@@ -24,6 +24,6 @@ There are modeifications of this model:
 	- `gan_cba`  
 	- ...  
 
-6. `research.ipynb` where all computations are made
+6. `researchs_256window.ipynb` and `researchs_64window.ipynb` where all computations are made 
 
-![Deiden_simil](TIME/De_iden_vs_structural_simil.png) 
+7. `models_new_64.py` and `models_new_256.py` are notebooks where Generator and Discrimiator are contained  
