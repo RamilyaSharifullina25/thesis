@@ -4,8 +4,8 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 import math
 
-# batch_size = 64
-# device = torch.device('cuda:0')
+batch_size = 64
+device = torch.device('cuda:1')
 
 def gaussian(window_size, sigma):
     gauss = torch.Tensor([math.exp(-(x - window_size//2)**2/float(2*sigma**2)) for x in range(window_size)])
@@ -13,39 +13,43 @@ def gaussian(window_size, sigma):
 
 def create_window(window_size, channel=5):
     _1D_window = gaussian(window_size, 1.5).unsqueeze(0).unsqueeze(0)
-    window = Variable(_1D_window.expand(channel, 1 ,window_size).contiguous())
+    window = Variable(_1D_window.expand(batch_size, channel,window_size).contiguous())
     return window
 
 def ssim_1d_conv(time_1, time_2, window_size=11, window=None, channel = 5, val_range = None, size_average = True, full=False):
     
+    time_1 = torch.from_numpy(time_1)
+    time_2 = torch.from_numpy(time_2)
     if val_range is None:
-        max_val = 3
-        min_val = -3
+        if torch.max(time_1) > 128:
+            max_val = 255
+        else:
+            max_val = 1
+
+        if torch.min(time_1) < -0.5:
+            min_val = -1
+        else:
+            min_val = 0
+        L = max_val - min_val
     else:
-        min_val, max_val = val_range
-
-    L = max_val - min_val
-    
-    time_1 = (torch.clip(time_1, min_val, max_val) - min_val)/L
-    time_2 = (torch.clip(time_2, min_val, max_val) - min_val)/L
-    L = 1 # since time_1 & time_2 were scaled
-
+        L = val_range
+        
     padd = 0
-    window = create_window(window_size = window_size, channel = channel).to(time_1.device)
+    window = create_window(window_size = window_size, channel = channel).to(device)
     
     time_1 = time_1.float()
     time_2 = time_2.float()
     
-    mu1 = F.conv1d(time_1.float(), window, padding=padd, groups=channel)
-    mu2 = F.conv1d(time_2.float(), window, padding=padd, groups=channel)
+    mu1 = F.conv1d(time_1.float(), window, padding=padd)
+    mu2 = F.conv1d(time_2.float(), window, padding=padd)
     
     mu1_sq = mu1.pow(2)
     mu2_sq = mu2.pow(2)
     mu1_mu2 = mu1 * mu2
     
-    sigma1_sq = F.conv1d(time_1 * time_1, window, padding=padd, groups=channel) - mu1_sq
-    sigma2_sq = F.conv1d(time_2 * time_2, window, padding=padd, groups=channel) - mu2_sq
-    sigma12 = F.conv1d(time_1 * time_2, window, padding=padd, groups=channel) - mu1_mu2
+    sigma1_sq = F.conv1d(time_1 * time_1, window, padding=padd) - mu1_sq
+    sigma2_sq = F.conv1d(time_2 * time_2, window, padding=padd) - mu2_sq
+    sigma12 = F.conv1d(time_1 * time_2, window, padding=padd) - mu1_mu2
     
     C1 = (0.01 * L) ** 2
     C2 = (0.03 * L) ** 2
@@ -82,12 +86,13 @@ class SSIM_1d_conv(torch.nn.Module):
 #         channel = time_1.size(1)
         channel = 5
         if channel == self.channel and self.window.dtype == time_1.dtype:
-            window = self.window.to(time_1.device)
+            window = self.window.to(device)
         else:
-            window = create_window(self.window_size, channel).to(time_1.device).type(time_1.dtype)
+            window = create_window(self.window_size, channel)
             
             self.window = window
             self.channel = channel
+
 
         return ssim_1d_conv(time_1, time_2, window=window, window_size=self.window_size, size_average=self.size_average)
     
